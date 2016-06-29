@@ -70,6 +70,7 @@ DOWNLOADS <- "Downloads"
 FUNCTIONS <- "Functions"
 SCRIPTS   <- "Scripts"
 DATABASE  <- "Databases"
+DOWNLOG   <- "Download_Log.sqlite"
  
 
 if(!dir.exists(DOWNLOADS))dir.create(DOWNLOADS)
