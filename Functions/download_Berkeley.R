@@ -1,9 +1,10 @@
-download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=TRUE){
+download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=DOWNLOG){
   require(R.utils)
   ##  file can be a url
   ##  file can be an index to berkely data
   ##  file can be a collection of specifiers
   ##  return list of downloaded files
+  DB <-dbConnect(SQLite(),dbname=DOWNLOG,flags=SQLITE_RW)
   
   filesValid <- FALSE
    
@@ -29,14 +30,14 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=TR
     
     if(class(files)=="integer"){
       filematches <- files[files %in% Directory$Index]
-      if(length(filematches)==0)stop(cat("Enter File indexes from ","\n",Directory$Index))
+      if(length(filematches)==0)stop(cat("Enter File indexes from: ","\n",Directory$Index))
       Directory <- Directory[filematches,]
     }
     if(class(files)=="character"){
       files <- tolower(files)
       #  check for any matches
       if(sum(files %in% Qualifiers)>0){
-        if(sum(files %in% Qualifiers)!=length(files))stop(cat("invalid selector ",files, "\n", "choose ",Qualifiers))
+        if(sum(files %in% Qualifiers)!=length(files))stop(cat("invalid selector: ",files[!files %in% Qualifiers], "\n", "choose from: ",Qualifiers))
         CoverageRows <-which( tolower(Directory$Coverage) %in% files)
         if(length(CoverageRows)>0) Directory <- Directory[CoverageRows,]
         AreaRows     <-which( tolower(Directory$Area) %in% files)
@@ -90,10 +91,10 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=TR
     destinationname<-file.path(Dirs,destinationname)
     if(!file.exists(destinationname) | (file.exists(destinationname) & overwrite)){
        download.file(url=currenturl,destfile=destinationname,mode="wb")
-       if(D$Extension[i]!="zip")Destinations <-c(Destinations,destinationname)
+       Destinations <-c(Destinations,destinationname)
        if(D$Extension[i]=="zip"){
            zipped <- unzip(destinationname,list=T)
-           cat("Unzipping ", zipped, "\n")
+           cat("Unzipping ", zipped$Name, "\n")
            Destinations<-c(Destinations,file.path(Dirs,zipped$Name))
            unzip(zipfile=destinationname,exdir=Dirs,junkpaths=T)
       
@@ -106,6 +107,9 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=TR
   }
   
    
+   DF <- data.frame(Filenames=Destinations, Date = as.character(Sys.time()),stringsAsFactors=FALSE  )
+   dbWriteTable(DB,"Log",DF)
+   dbDisconnect((DB))
   
  return(Destinations) 
   
