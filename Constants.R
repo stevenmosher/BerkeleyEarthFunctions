@@ -71,7 +71,8 @@ FUNCTIONS <- "Functions"
 SCRIPTS   <- "Scripts"
 DATABASE  <- "Databases"
 DOWNLOG   <- "Download_Log.sqlite"
- 
+xxx <-dbConnect(SQLite(),dbname=DOWNLOG)
+dbDisconnect(xxx)
 
 if(!dir.exists(DOWNLOADS))dir.create(DOWNLOADS)
 if(!dir.exists(FUNCTIONS))dir.create(FUNCTIONS)
