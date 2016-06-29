@@ -70,13 +70,13 @@ DOWNLOADS <- "Downloads"
 FUNCTIONS <- "Functions"
 SCRIPTS   <- "Scripts"
 DATABASE  <- "Databases"
-DATA      <- "Data"
+ 
 
 if(!dir.exists(DOWNLOADS))dir.create(DOWNLOADS)
 if(!dir.exists(FUNCTIONS))dir.create(FUNCTIONS)
 if(!dir.exists(SCRIPTS))dir.create(SCRIPTS)
 if(!dir.exists(DATABASE))dir.create(DATABASE)
-if(!dir.exists(DATA))dir.create(DATA)
+ 
 
 
 #############################  END URLS
@@ -112,7 +112,7 @@ BERKELEY_DATA$Metric[grepl("TMIN",BERKELEY_DATA$Url)] <-"TMIN"
 BERKELEY_DATA$Processing[grepl("Multi-valued",BERKELEY_DATA$Url)]  <-"Raw"
 BERKELEY_DATA$Processing[grepl("Single-valued",BERKELEY_DATA$Url)] <-"Raw"
 BERKELEY_DATA$Processing[grepl("Quality",BERKELEY_DATA$Url)]       <-"QC"
-BERKELEY_DATA$TimePeriod[grepl("daily",BERKELEY_DATA$Url)]         <-"Daily"
+BERKELEY_DATA$TimePeriod[grepl("daily",BERKELEY_DATA$Url,ignore.case=T)]<-"Daily"
 BERKELEY_DATA$Coverage[grepl("Land_and_Ocean",BERKELEY_DATA$Url)]  <-"LandOcean"
 BERKELEY_DATA$Area[grepl("Multi-valued",BERKELEY_DATA$Url)]  <-"Station"
 BERKELEY_DATA$Area[grepl("Single-valued",BERKELEY_DATA$Url)] <-"Station"
