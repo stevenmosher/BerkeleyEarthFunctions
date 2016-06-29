@@ -3,5 +3,6 @@ Initialize <- function(){
   source("Constants.R")
   functions <- list.files(FUNCTIONS,full.names=T, pattern = "\\.R")
   if(length(functions)>0)lapply(functions, FUN=source)
+  ####  Create  database of downloads
   return(getwd())
 }
