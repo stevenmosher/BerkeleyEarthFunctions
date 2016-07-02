@@ -12,7 +12,7 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=FALSE,log=D
     stop("You must pass in a table dataframe like ",BERKELEY_DATA, "\n")
   }else
   {
-   Qualifiers <- tolower(unique(unlist(select(Directory,Area,TimePeriod,Metric,Processing))))
+   Qualifiers <- tolower(unique(unlist(dplyr::select(Directory,Area,TimePeriod,Metric,Processing))))
    
    
   }
