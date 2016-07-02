@@ -1,4 +1,4 @@
-download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=DOWNLOG){
+download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=FALSE,log=DOWNLOG){
   require(R.utils)
   ##  file can be a url
   ##  file can be an index to berkely data
@@ -12,7 +12,7 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=DO
     stop("You must pass in a table dataframe like ",BERKELEY_DATA, "\n")
   }else
   {
-   Qualifiers <- tolower(unique(unlist(select(Directory,Coverage,Area,TimePeriod,Type,Metric,Processing))))
+   Qualifiers <- tolower(unique(unlist(select(Directory,Area,TimePeriod,Metric,Processing))))
    
    
   }
@@ -38,14 +38,11 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=DO
       #  check for any matches
       if(sum(files %in% Qualifiers)>0){
         if(sum(files %in% Qualifiers)!=length(files))stop(cat("invalid selector: ",files[!files %in% Qualifiers], "\n", "choose from: ",Qualifiers))
-        CoverageRows <-which( tolower(Directory$Coverage) %in% files)
-        if(length(CoverageRows)>0) Directory <- Directory[CoverageRows,]
+        
         AreaRows     <-which( tolower(Directory$Area) %in% files)
         if(length(AreaRows)>0) Directory <- Directory[AreaRows,]
         TimeRows     <-which( tolower(Directory$TimePeriod) %in% files)
         if(length(TimeRows)>0) Directory <- Directory[TimeRows,]
-        TypeRows     <-which( tolower(Directory$Type) %in% files)
-        if(length(TypeRows)>0) Directory <- Directory[TypeRows,]
         MetricRows     <-which( tolower(Directory$Metric) %in% files)
         if(length(MetricRows)>0) Directory <- Directory[MetricRows,]
         ProcessRows     <-which( tolower(Directory$Processing) %in% files)
@@ -75,7 +72,7 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=DO
   if(!filesValid)stop(cat("files has to a be a vector of integers, a single url or charcter strings","\n",
                        files))
   Year_Month <- str_replace(as.yearmon(as.character(Sys.Date()))," ","_")
-   
+  if(nrow(Directory)==0)stop("No files selected")
   
   
   D<- Directory
@@ -85,8 +82,7 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=DO
     currenturl <- D$Url[i]
     cat("Downloading ", currenturl, "\n")
     destinationname <- basename(currenturl)
-    Dirs <- file.path(D$Directory[i],D$Area[i],D$Metric[i],D$Processing[i],D$Coverage[i],
-                              D$TimePeriod[i],D$Type[i],Year_Month)
+    Dirs <- file.path(D$Directory[i],D$Area[i],D$TimePeriod[i],D$Processing[i],D$Metric[i],Year_Month) 
     if(!dir.exists(Dirs))dir.create(Dirs,recursive = TRUE)
     destinationname<-file.path(Dirs,destinationname)
     if(!file.exists(destinationname) | (file.exists(destinationname) & overwrite)){
@@ -106,10 +102,11 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=TRUE,log=DO
     
   }
   
-   
-   DF <- data.frame(Filenames=Destinations, Date = as.character(Sys.time()),stringsAsFactors=FALSE  )
-   dbWriteTable(DB,"Log",DF)
-   dbDisconnect((DB))
+   if(length(Destinations)>0){
+    DF <- data.frame(Filenames=Destinations, Date = as.character(Sys.time()),stringsAsFactors=FALSE  )
+     dbWriteTable(DB,"Log",DF, append = TRUE)
+   }
+   dbDisconnect( DB )
   
  return(Destinations) 
   
