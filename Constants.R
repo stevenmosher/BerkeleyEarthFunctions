@@ -65,6 +65,11 @@ u62 <- "http://berkeleyearth.lbl.gov/auto/Global/Gridded/Complete_TMIN_Daily_Lat
 u63 <- "http://berkeleyearth.lbl.gov/auto/Global/Gridded/Complete_TMIN_Daily_LatLong1_1990.nc"
 u64 <- "http://berkeleyearth.lbl.gov/auto/Global/Gridded/Complete_TMIN_Daily_LatLong1_2000.nc"
 u65 <- "http://berkeleyearth.lbl.gov/auto/Global/Gridded/Complete_TMIN_Daily_LatLong1_2010.nc"
+u66 <- "http://berkeleyearth.lbl.gov/auto/Global/Land_and_Ocean_complete.txt"
+u67 <- "http://berkeleyearth.lbl.gov/auto/Global/Complete_TAVG_summary.txt"
+u68 <- "http://berkeleyearth.lbl.gov/auto/Global/Complete_TMAX_summary.txt"
+u69 <- "http://berkeleyearth.lbl.gov/auto/Global/Complete_TMIN_summary.txt"
+u70 <- "http://berkeleyearth.lbl.gov/auto/Global/Land_and_Ocean_summary.txt"
 
 DOWNLOADS <- "Downloads"
 FUNCTIONS <- "Functions"
@@ -96,13 +101,12 @@ BERKELEY_DATA <- tbl_df(data.frame(Url = c(u1,u2,u3,u4,u5,u6,u7,u8,u9,u10,u11,u1
                                            u21,u22,u23,u24,u25,u26,u27,u28,u29,u30,u31,u32,u33,u34,u35,u36,u37,u38,u39,u40,
                                            u41,u42,u43,u44,u45,u46,u47,u48,u49,u50,
                                            u51,u52,u53,u54,u55,u56,u57,u58,u59,u60,
-                                           u61,u62,u63,u64,u65),
+                                           u61,u62,u63,u64,u65,u66,u67,u68,u69,u70),
                                    stringsAsFactors=FALSE)) %>%
                  mutate(Extension = str_sub(Url, unlist(lapply(str_locate_all(Url,pattern="\\.") , FUN=max))+1,
                                             nchar(Url)))    %>%
-                 mutate(Directory = DOWNLOADS,Coverage   = "Land", Area= "Global", TimePeriod  ="Monthly") %>%
-                 mutate(Type  = ifelse(grepl("Gridded",Url),"Gridded","TimeSeries")) %>%
-                 mutate(Metric =  "TAVG",Processing ="Adjusted") %>%
+                 mutate(Directory = DOWNLOADS, Area= "Global", TimePeriod  ="Monthly") %>%
+                 mutate(Processing ="Averaged",Metric =  "TAVG") %>%
                  mutate(Index=1:n())
                  
                 
@@ -111,21 +115,20 @@ BERKELEY_DATA <- tbl_df(data.frame(Url = c(u1,u2,u3,u4,u5,u6,u7,u8,u9,u10,u11,u1
 
 BERKELEY_DATA$Metric[grepl("TMAX",BERKELEY_DATA$Url)] <-"TMAX"
 BERKELEY_DATA$Metric[grepl("TMIN",BERKELEY_DATA$Url)] <-"TMIN"
-BERKELEY_DATA$Processing[grepl("Multi-valued",BERKELEY_DATA$Url)]  <-"Raw"
-BERKELEY_DATA$Processing[grepl("Single-valued",BERKELEY_DATA$Url)] <-"Raw"
-BERKELEY_DATA$Processing[grepl("Quality",BERKELEY_DATA$Url)]       <-"QC"
+BERKELEY_DATA$Processing[grepl("Multi-valued",BERKELEY_DATA$Url)]  <-"Multi-valued"
+BERKELEY_DATA$Processing[grepl("Breakpoint",BERKELEY_DATA$Url)]    <-"Breakpoint"
+BERKELEY_DATA$Processing[grepl("Single-valued",BERKELEY_DATA$Url)] <-"Single-valued"
+BERKELEY_DATA$Processing[grepl("Quality",BERKELEY_DATA$Url)]       <-"Quality"
+BERKELEY_DATA$Processing[BERKELEY_DATA$Extension=="nc"]            <-"Gridded"
 BERKELEY_DATA$TimePeriod[grepl("daily",BERKELEY_DATA$Url,ignore.case=T)]<-"Daily"
-BERKELEY_DATA$Coverage[grepl("Land_and_Ocean",BERKELEY_DATA$Url)]  <-"LandOcean"
-BERKELEY_DATA$Area[grepl("Breakpoint",BERKELEY_DATA$Url)]  <-"Station"
+BERKELEY_DATA$TimePeriod[grepl("summary",BERKELEY_DATA$Url,ignore.case=T)]<-"Annual"
+BERKELEY_DATA$Area[grepl("Breakpoint",BERKELEY_DATA$Url)]   <-"Station"
 BERKELEY_DATA$Area[grepl("Multi-valued",BERKELEY_DATA$Url)]  <-"Station"
 BERKELEY_DATA$Area[grepl("Single-valued",BERKELEY_DATA$Url)] <-"Station"
 BERKELEY_DATA$Area[grepl("Quality",BERKELEY_DATA$Url)]       <-"Station"
 
 
- 
 
-
- 
 
 
                             
