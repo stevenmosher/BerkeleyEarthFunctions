@@ -71,37 +71,32 @@ readCruStations <- function(inFile, output=c( "Data","Inventory")){
       
       if(matchedO ==1 & output == "inventory")return(Inv)
 
-    begin <- min(Inv$StartYear)
-    end   <- max(Inv$EndYear)
-    Years <- begin:end
-    NoYear <- end-begin+1
-    stations <- nrow(Inv)
-    Id    <- unique(Inv$Id)
-    DATA  <- matrix(NA, ncol=4, nrow = length(Id)*NoYear*12)
-    dimnames(DATA)[2]<- list(c("Id","Year","Month","TAVG"))
-    DATA[,"Id"]<-rep(Id, each=NoYear*12)
-    DATA[,"Year"]<- rep(Years, each=12)
-    DATA[, "Month"]<-1:12
+      begin <- min(Inv$StartYear)
+      end   <- max(Inv$EndYear)
+      Years <- begin:end
+      stations <- nrow(Inv)
+      DATA <- array(NA,dim=c(stations,12,length(Years)))
+      dimnames(DATA)<-list(Inv$Id,month.abb,Years)
      
-
-    stationCount <- 0
-    for(line in 1:length(X)){
-         if (nchar(X[line]) == headerLength){
-            # we have a header
-            stationCount <- stationCount + 1
-          } else {
-             # we have a data record
-            thisLine <- as.numeric(unlist(strsplit(X[line]," +")))
-            thisLine[thisLine == -999] <-NA
-            ThisID <- Id[stationCount]
-            thisYear <- thisLine[1]
-            INDEX <- min(intersect(which(DATA[,"Id"] == ThisID),which(DATA[,"Year"]==thisYear)))
-            DATA[INDEX:(INDEX+11),"TAVG"] <- thisLine[2:13]
-     
-          }
-    }
-   if(matchedO == 2)return(list(Data = tbl_df(DATA),Inventory=Inv))
-   if(matchedO ==1 & output == "data")return(tbl_df(DATA))
+      stationCount <- 0
+      for(line in 1:length(X)){
+        if (nchar(X[line]) == headerLength){
+          # we have a header
+          stationCount <- stationCount + 1
+        } else {
+          # we have a data record
+          thisLine <- as.numeric(unlist(strsplit(X[line]," +")))
+          thisLine[thisLine == -999] <-NA
+          thisYear <- thisLine[1] - begin + 1
+          DATA[stationCount,,thisYear] <- thisLine[2:13]/10
+          
+        }
+      }
+      
+      DATA <- apply(DATA,MARGIN = 1, FUN = c)
+      DATA <- ts(DATA, start = begin, frequency = 12)
+   if(matchedO == 2)return(list(Data = DATA,Inventory=Inv))
+   if(matchedO ==1 & output == "data")return( DATA )
            
        
 }
