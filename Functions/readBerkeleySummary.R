@@ -69,12 +69,22 @@ readBerkeleySummary <-function(filename){
                    "AnomalyFiveYear","FiveYearUncertainty","AnomalyTenYear","TenYearUncertainty",
                    "AnomalyTwentyYear","TwentyYearUncertainty")
     Aline <- grep(" Feb   Mar   Apr",Header,ignore.case=T)+1
-    Absolute <- str_trim(str_sub(Header[Aline],str_locate(pattern=fixed("%"),Header[Aline])[2]+1))
-    BasePeriod <-as.numeric(unlist(str_split(Absolute, pattern = "\\s+")))
-    if(grepl("TMAX",basename(filename))) D[,"TMAX"]<- D$AnomalyMonthly+rep(BasePeriod, length.out =nrow(D))
-    if(grepl("TMIN",basename(filename))) D[,"TMIN"]<-D$AnomalyMonthly+rep(BasePeriod, length.out =nrow(D))
-    if(grepl("TAVG",basename(filename))) D[,"TAVG"]<-D$AnomalyMonthly+rep(BasePeriod, length.out =nrow(D))
-    D <- tbl_df(D[,c(1,2,13,3:12)])
+    Absolute1 <- str_trim(str_sub(Header[Aline[1]],str_locate(pattern=fixed("%"),Header[Aline[1]])[2]+1))
+    BasePeriod1 <-as.numeric(unlist(str_split(Absolute1, pattern = "\\s+")))
+    Absolute2 <- str_trim(str_sub(Header[Aline[2]],str_locate(pattern=fixed("%"),Header[Aline[2]])[2]+1))
+    BasePeriod2 <-as.numeric(unlist(str_split(Absolute2, pattern = "\\s+")))
+    MinYear <- min(D$Year)
+    Dex <- max(which(D$Year==MinYear & D$Month==1))
+    Climate1 <- rep(BasePeriod1, length.out=Dex-1)
+    Climate2 <- rep(BasePeriod2, length.out=Dex-1)
+    Climate2 <- c(Climate1,Climate2)
+    D[,"TAVG"]<- D$AnomalyMonthly+Climate2
+    Type = c(rep("SAT_Above_Ice",length.out=Dex-1),rep("SST_Below_Ice",length.out=Dex-1))
+    D[,"Type"]<- Type
+     
+    D <- tbl_df(D[,c("Year","Month","Type","TAVG","AnomalyMonthly","MonthlyUncertainty","AnomalyAnnual",
+                     "AnnualUncertainty","AnomalyFiveYear","FiveYearUncertainty","AnomalyTenYear",
+                     "TenYearUncertainty","AnomalyTwentyYear","TwentyYearUncertainty" )])
     return(D)
   } 
   
