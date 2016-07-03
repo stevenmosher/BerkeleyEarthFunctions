@@ -75,14 +75,13 @@ DOWNLOADS <- "Downloads"
 FUNCTIONS <- "Functions"
 SCRIPTS   <- "Scripts"
 DATABASE  <- "Databases"
-DOWNLOG   <- "Download_Log.sqlite"
-xxx <-dbConnect(SQLite(),dbname=DOWNLOG)
-dbDisconnect(xxx)
+METADATA  <- "Metadata"
 
 if(!dir.exists(DOWNLOADS))dir.create(DOWNLOADS)
 if(!dir.exists(FUNCTIONS))dir.create(FUNCTIONS)
 if(!dir.exists(SCRIPTS))dir.create(SCRIPTS)
 if(!dir.exists(DATABASE))dir.create(DATABASE)
+if(!dir.exists(METADATA))dir.create(METADATA)
  
 
 
