@@ -1,10 +1,10 @@
-download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=FALSE,log=DOWNLOG){
+download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=FALSE){
   require(R.utils)
   ##  file can be a url
   ##  file can be an index to berkely data
   ##  file can be a collection of specifiers
   ##  return list of downloaded files
-  DB <-dbConnect(SQLite(),dbname=DOWNLOG,flags=SQLITE_RW)
+  
   
   filesValid <- FALSE
    
@@ -102,11 +102,7 @@ download_Berkeley<- function(files,Directory=BERKELEY_DATA,overwrite=FALSE,log=D
     
   }
   
-   if(length(Destinations)>0){
-    DF <- data.frame(Filenames=Destinations, Date = as.character(Sys.time()),stringsAsFactors=FALSE  )
-     dbWriteTable(DB,"Log",DF, append = TRUE)
-   }
-   dbDisconnect( DB )
+   
   
  return(Destinations) 
   
