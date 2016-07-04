@@ -1,4 +1,4 @@
-readBerkeleyNetCDF<- function(filename = fname, Extent=NULL)){
+readBerkeleyNetCDF<- function(filename = fname, Extent=NULL){
   
   require(raster)
   X<- brick(filename, varname = 'temperature')
