@@ -1,7 +1,7 @@
 currentCopy <- function(filename,filter=c("TAVG","Single-Value")){
    
     filter <- tolower(filter)
-    foundfiles <- list.files(full.names=TRUE, recursive = TRUE, pattern = basename(filename))
+    foundfiles <- list.files(path=getwd(),full.names=TRUE, recursive = TRUE, pattern = basename(filename))
     if(length(foundfiles)==0)stop(cat(filename, " not found","\n"))
     founddirs  <- dirname(foundfiles)
     if(length(foundfiles)==1){
