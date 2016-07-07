@@ -38,7 +38,15 @@ readBerkeleyStation <- function(filename) {
          data_flag_definitions.txt    = {X <- tbl_df(read.delim(filename,   comment.char = "%",quote ="", header = FALSE, 
                                                     col.names=c("Flag","Description"), stringsAsFactors= FALSE)) %>% return
                                          },
-         flags.txt                    = { },
+         flags.txt                    = {X <- tbl_df(read.delim(filename, comment.char = "%",
+                                                                quote ="",header = FALSE,stringsAsFactors= FALSE))%>%
+                                         select_if(function(col) notallna(col)) %>% 
+                                         rename(Id = V1,Series=V2,Date=V3) %>%
+                                         gather(Flags,Code,starts_with("V")) %>%
+                                         filter(Code !=0) %>%
+                                         mutate(Year = as.integer(trunc(Date)),Month=as.integer(round(((Date %% 1)*12)+.5,0)),Date=NULL) %>%
+                                         select(Id,Series,Year,Month,Code)  %>% return 
+                                         },
          site_complete_detail.txt     = { X <- tbl_df(read.delim(filename ,comment.char = "%", quote ="",header = FALSE, stringsAsFactors= FALSE,
                                                       col.names= c("Id","ReportNo","Name","Country","StartDate","EndDate","Source","Latitude","Longitude",
                                                       "Elevation" ,"AltElevation","LatUnc","LonUnc","ElvUnc", "ReloFlag","State","County","Tzone",
