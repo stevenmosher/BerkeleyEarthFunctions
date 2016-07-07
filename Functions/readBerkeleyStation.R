@@ -117,8 +117,7 @@ readBerkeleyStation <- function(filename) {
          
          
                                          },
-         station_change.txt           = {X <- tbl_df(read.delim(filename,comment.char = "%",
-                                                         quote ="",header = FALSE,stringsAsFactors= FALSE,
+         station_change.txt           = {X <- tbl_df(read.delim(filename,comment.char = "%",quote ="",header = FALSE,stringsAsFactors= FALSE,
                                                          col.names=c("Id","EventCount","Date","ChangeType"))) %>%
                                               mutate(Year = as.integer(trunc(Date)),Month = as.integer(round(((Date %% 1)*12)+.5,0)),
                                                      Date=NULL) %>% return
@@ -130,8 +129,5 @@ readBerkeleyStation <- function(filename) {
   )
   
   
-  
-  
- 
   
 }
