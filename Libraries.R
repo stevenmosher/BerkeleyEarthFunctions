@@ -1,6 +1,17 @@
 ###################  Libraries used by Functions#########
-PACKAGES <- c("R.utils","RSQLite","dplyr","data.table","zoo","raster","ncdf4","stringr","pacman","readr","tidyr")
+ 
+library(R.utils)
+library(RSQLite)
+library(raster)
+library(ncdf4)
+library(zoo)
+library(data.table)
+library(tidyr)
+library(foreign)
+library(readr)
+library(stringr)
+library(ggplot2)
+library(purrr)
+library(dplyr)
 
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(char=PACKAGES)
  
