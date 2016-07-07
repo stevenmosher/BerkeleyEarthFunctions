@@ -99,9 +99,9 @@ readBerkeleyStation <- function(filename) {
                                                           col.names=c("Flag","Description"),
                                                           quote ="",header = FALSE,stringsAsFactors= FALSE)) %>% return
                                         },
-         sources.txt                  = { X <- tbl_df(read.delim(filename,   comment.char = "%",quote ="", header = FALSE, stringsAsFactors= FALSE,
+         sources.txt                  = { X <- tbl_df(x<-read.delim(filename,   comment.char = "%",quote ="", header = FALSE, stringsAsFactors= FALSE, 
                                                       col.names = c("Id","Series","Date","F1","F2","F3","F4","F5","F6","F7","F8","F9"))) %>%
-                                          gather(Flags,Code,starts_with("V")) %>% 
+                                          gather(Flags,Code,starts_with("F")) %>% 
                                           filter(Code !=0) %>%  
                                           select(Id,Series,Date,Code) %>%
                                           mutate(Year = as.integer(trunc(Date)),Month=as.integer(round(((Date %% 1)*12)+.5,0)),Date=NULL) %>%
