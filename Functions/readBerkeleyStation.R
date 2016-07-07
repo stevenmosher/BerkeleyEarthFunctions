@@ -38,8 +38,8 @@ readBerkeleyStation <- function(filename) {
          data_flag_definitions.txt    = {X <- tbl_df(read.delim(filename,   comment.char = "%",quote ="", header = FALSE, 
                                                     col.names=c("Flag","Description"), stringsAsFactors= FALSE)) %>% return
                                          },
-         flags.txt                    = {X <- tbl_df(read.delim(filename, comment.char = "%",
-                                                                quote ="",header = FALSE,stringsAsFactors= FALSE))%>%
+         flags.txt                    = {X <- tbl_df(read.delim(filename, comment.char = "%",quote ="",header = FALSE,
+                                                                 stringsAsFactors= FALSE))%>%
                                          select_if(function(col) notallna(col)) %>% 
                                          rename(Id = V1,Series=V2,Date=V3) %>%
                                          gather(Flags,Code,starts_with("V")) %>%
