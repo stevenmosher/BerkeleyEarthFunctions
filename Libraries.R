@@ -13,5 +13,8 @@ library(stringr)
 library(ggplot2)
 library(purrr)
 library(dplyr)
+library(rgdal)
+library(rasterVis)
+library(RgoogleMaps)
 
  
