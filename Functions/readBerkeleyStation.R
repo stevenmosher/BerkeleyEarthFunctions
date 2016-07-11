@@ -33,7 +33,7 @@ readBerkeleyStation <- function(filename) {
            
            
            
-           return
+            
          },
          data_flag_definitions.txt    = {X <- tbl_df(read.delim(filename,   comment.char = "%",quote ="", header = FALSE, 
                                                     col.names=c("Flag","Description"), stringsAsFactors= FALSE)) %>% return
