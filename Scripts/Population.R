@@ -40,6 +40,7 @@ ggplot(data=Locations, aes(LogPop, fill=Active)) +geom_histogram(position="dodge
 ggplot(filter(Locations,Active==T), aes(LogPop)) + stat_ecdf(geom = "step")
 ggplot( Locations , aes(LogPop,color=Active)) + stat_ecdf(geom = "step")
  
+ggplot( Locations , aes(EarlyYear,color=Active)) + stat_ecdf(geom = "step")
 
 Conus2005 <- crop(raster(Density,Hydelayer2005),conusExt)
 
