@@ -1,5 +1,5 @@
-Initialize <- function(){
-  source("Libraries.R")
+  
+  source("Constants.R")
+  functions <- list.files("Functions", full.name=TRUE,pattern = "\\.R")
+  for(s in functions)source(s)
    
-  return(getwd())
-}

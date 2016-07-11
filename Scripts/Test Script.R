@@ -1,3 +1,5 @@
+source("Constants.R")
+
 
 TMAX<-readBerkeley(filename = "Complete_TMAX_summary.txt")
 TAVG<-readBerkeley(filename = "Complete_TAVG_summary.txt")
@@ -157,6 +159,9 @@ for(i in 1:length(SS)){
   print(SS[i])
   
 }
+
+
+SS <- list.files(path=getwd(),recursive = TRUE,full.names=T, pattern="flags.txt")
 
 X <- X %>% map_df( all(is.na(x)))
 
